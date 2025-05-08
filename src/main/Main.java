@@ -1,114 +1,130 @@
+// main/Main.java
 package main;
 
 import model.*;
 import service.StreamingService;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         StreamingService service = new StreamingService();
-        rulareTest(service);
+        demo(service);
         rulareMeniu(service);
     }
 
-    private static void rulareTest(StreamingService service) {
-        // Filme
-        Film f1 = new Film("Inception", "Thriller SF", 2010,
-                Arrays.asList("SF", "Thriller"), Arrays.asList("DiCaprio"), false);
-        Film f2 = new Film("The Matrix", "Actiune cibernetica", 1999,
-                Arrays.asList("Actiune", "SF"), Arrays.asList("Keanu Reeves"), true);
+    private static void demo(StreamingService service) {
+        service.adaugaUtilizatorPremium("ana", "1234-5678-9012-3456", "12/26");
+        service.adaugaUtilizator("bogdan", false);
 
-        service.adaugaFilm(f1);
-        service.adaugaFilm(f2);
+        service.adaugaFilm("Interstellar", "Calatorie in spatiu", 2014, true);
+        service.adaugaFilm("Shrek", "Comedie animata", 2001, false);
 
-        // Utilizatori
-        Utilizator u1 = new Utilizator("andrei", false);
-        Utilizator u2 = new Utilizator("maria", true);
+        service.adaugaRecenzie(1, 1, "Fenomenal", 5);
+        service.adaugaRecenzie(2, 2, "Super amuzant", 4);
 
-        service.inregistreazaUtilizator(u1);
-        service.inregistreazaUtilizator(u2);
+        service.vizioneazaFilm(1, 1);
+        service.vizioneazaFilm(2, 2);
+        service.vizioneazaFilm(2, 2);
 
-        // Recenzii
-        service.adaugaRecenzie("andrei", "Inception", "Foarte tare", 5);
-        service.adaugaRecenzie("maria", "The Matrix", "Excelent", 4);
+        System.out.println("\n--- DEMO ---");
+        System.out.println("\nUtilizatori:");
+        service.afiseazaUtilizatori();
 
-        // Statistici
-        System.out.println("Toate filmele:");
-        service.afiseazaToateFilmele();
+        System.out.println("\nFilme:");
+        service.afiseazaFilme();
 
-        System.out.println("\nUtilizatori premium:");
-        service.afiseazaUtilizatoriPremium();
+        System.out.println("\nRecenzii film 1:");
+        service.afiseazaRecenziiFilm(1);
 
-        System.out.println("\nRecenzii pentru Inception:");
-        service.afiseazaRecenziiPentruFilm("Inception");
+        System.out.println("\nFilme sortate:");
+        service.afiseazaFilmeSortate();
+
+        System.out.println("\nVizionari:");
+        service.afiseazaToateVizionarile();
+
+        System.out.println("--- END DEMO ---\n");
     }
 
     private static void rulareMeniu(StreamingService service) {
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
             System.out.println("\n--- MENIU ---");
             System.out.println("1. Adauga utilizator");
             System.out.println("2. Adauga film");
-            System.out.println("3. Adauga recenzie la film");
+            System.out.println("3. Afiseaza toti utilizatorii");
             System.out.println("4. Afiseaza toate filmele");
-            System.out.println("5. Afiseaza utilizatori");
+            System.out.println("5. Afiseaza toate recenziile");
             System.out.println("6. Afiseaza recenzii pentru un film");
+            System.out.println("7. Adauga recenzie film (de la utilizator)");
+            System.out.println("8. Afiseaza filme sortate dupa rating/vizionari/an lansare");
+            System.out.println("9. Vizualizeaza film (de la utilizator)");
+            System.out.println("10. Afiseaza toate vizionarile");
             System.out.println("0. Iesire");
             System.out.print("Alege optiunea: ");
 
             int opt = Integer.parseInt(scanner.nextLine());
             switch (opt) {
-                case 1:
-                    System.out.print("Introdu username: ");
-                    String user = scanner.nextLine();
+                case 1 -> {
+                    System.out.print("Username: ");
+                    String username = scanner.nextLine();
                     System.out.print("Este premium? (true/false): ");
                     boolean premium = Boolean.parseBoolean(scanner.nextLine());
-                    service.inregistreazaUtilizator(new Utilizator(user, premium));
-                    break;
-                case 2:
-                    System.out.print("Titlu film: ");
+                    if (premium) {
+                        System.out.print("Card bancar: ");
+                        String card = scanner.nextLine();
+                        System.out.print("Data expirare (MM/YY): ");
+                        String data = scanner.nextLine();
+                        service.adaugaUtilizatorPremium(username, card, data);
+                    } else {
+                        service.adaugaUtilizator(username, false);
+                    }
+                }
+                case 2 -> {
+                    System.out.print("Titlu: ");
                     String titlu = scanner.nextLine();
                     System.out.print("Descriere: ");
                     String descriere = scanner.nextLine();
                     System.out.print("An lansare: ");
                     int an = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Genuri separate prin virgula: ");
-                    String[] genuri = scanner.nextLine().split(",");
-                    System.out.print("Actori separati prin virgula: ");
-                    String[] actori = scanner.nextLine().split(",");
                     System.out.print("Este premium? (true/false): ");
-                    boolean isPrem = Boolean.parseBoolean(scanner.nextLine());
-                    service.adaugaFilm(new Film(titlu, descriere, an, Arrays.asList(genuri), Arrays.asList(actori), isPrem));
-                    break;
-                case 3:
-                    System.out.print("Username: ");
-                    String u = scanner.nextLine();
-                    System.out.print("Titlu film: ");
-                    String tf = scanner.nextLine();
+                    boolean premium = Boolean.parseBoolean(scanner.nextLine());
+                    service.adaugaFilm(titlu, descriere, an, premium);
+                }
+                case 3 -> service.afiseazaUtilizatori();
+                case 4 -> service.afiseazaFilme();
+                case 5 -> service.afiseazaToateRecenziile();
+                case 6 -> {
+                    System.out.print("ID film: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    service.afiseazaRecenziiFilm(id);
+                }
+                case 7 -> {
+                    System.out.print("ID utilizator: ");
+                    int idUser = Integer.parseInt(scanner.nextLine());
+                    System.out.print("ID film: ");
+                    int idFilm = Integer.parseInt(scanner.nextLine());
                     System.out.print("Comentariu: ");
-                    String com = scanner.nextLine();
+                    String comentariu = scanner.nextLine();
                     System.out.print("Stele (1-5): ");
                     int stele = Integer.parseInt(scanner.nextLine());
-                    service.adaugaRecenzie(u, tf, com, stele);
-                    break;
-                case 4:
-                    service.afiseazaToateFilmele();
-                    break;
-                case 5:
-                    service.afiseazaUtilizatori();
-                    break;
-                case 6:
-                    System.out.print("Titlu film: ");
-                    String tf2 = scanner.nextLine();
-                    service.afiseazaRecenziiPentruFilm(tf2);
-                    break;
-                case 0:
+                    service.adaugaRecenzie(idUser, idFilm, comentariu, stele);
+                }
+                case 8 -> service.afiseazaFilmeSortate();
+                case 9 -> {
+                    System.out.print("ID utilizator: ");
+                    int idUser = Integer.parseInt(scanner.nextLine());
+                    System.out.print("ID film: ");
+                    int idFilm = Integer.parseInt(scanner.nextLine());
+                    service.vizioneazaFilm(idUser, idFilm);
+                }
+                case 10 -> service.afiseazaToateVizionarile();
+                case 0 -> {
                     System.out.println("La revedere!");
                     return;
-                default:
-                    System.out.println("Optiune invalida.");
+                }
+                default -> System.out.println("Optiune invalida.");
             }
         }
     }

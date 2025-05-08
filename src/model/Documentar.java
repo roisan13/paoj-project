@@ -3,10 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Serial implements Reviewable, Viewable {
+public class Documentar implements Reviewable, Viewable {
     private String titlu;
-    private int numarSezoane;
-    private List<String> genuri;
+    private String autor;
+    private int durataMinute;
+    private String subiect;
     private boolean estePremium;
 
     private double rating;
@@ -14,10 +15,11 @@ public class Serial implements Reviewable, Viewable {
     private int numarVizionari;
     private List<Recenzie> recenzii;
 
-    public Serial(String titlu, int numarSezoane, List<String> genuri, boolean estePremium) {
+    public Documentar(String titlu, String autor, int durataMinute, String subiect, boolean estePremium) {
         this.titlu = titlu;
-        this.numarSezoane = numarSezoane;
-        this.genuri = genuri;
+        this.autor = autor;
+        this.durataMinute = durataMinute;
+        this.subiect = subiect;
         this.estePremium = estePremium;
         this.rating = 0.0;
         this.numarRecenzii = 0;
@@ -63,21 +65,26 @@ public class Serial implements Reviewable, Viewable {
         return numarRecenzii;
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public int getDurataMinute() {
+        return durataMinute;
+    }
+
+    public String getSubiect() {
+        return subiect;
+    }
+
     public List<Recenzie> getRecenzii() {
         return recenzii;
     }
 
-    public int getNumarSezoane() {
-        return numarSezoane;
-    }
-
-    public List<String> getGenuri() {
-        return genuri;
-    }
-
     @Override
     public String toString() {
-        return titlu + " | Sezoane: " + numarSezoane + " | Rating: " +
-                String.format("%.2f", rating) + " | Vizionari: " + numarVizionari + " | Premium: " + estePremium;
+        return titlu + " | Autor: " + autor + " | Durata: " + durataMinute + " min | Subiect: " + subiect +
+                " | Rating: " + String.format("%.2f", rating) +
+                " | Vizionari: " + numarVizionari + " | Premium: " + estePremium;
     }
 }

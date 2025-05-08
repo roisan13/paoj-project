@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Film implements Reviewable {
+public class Film implements Reviewable, Viewable {
     private String titlu;
     private String descriere;
     private int anLansare;
@@ -13,6 +13,7 @@ public class Film implements Reviewable {
 
     private double rating;
     private int numarRecenzii;
+    private int numarVizionari;
     private List<Recenzie> recenzii;
 
     public Film(String titlu, String descriere, int anLansare, List<String> genuri, List<String> actori, boolean estePremium) {
@@ -24,6 +25,7 @@ public class Film implements Reviewable {
         this.estePremium = estePremium;
         this.rating = 0.0;
         this.numarRecenzii = 0;
+        this.numarVizionari = 0;
         this.recenzii = new ArrayList<>();
     }
 
@@ -35,14 +37,38 @@ public class Film implements Reviewable {
         rating = (total + recenzie.getStele()) / numarRecenzii;
     }
 
-    public String getTitlu() {
-        return titlu;
+    @Override
+    public void vizioneaza() {
+        numarVizionari++;
+    }
+
+    @Override
+    public int getNumarVizionari() {
+        return numarVizionari;
+    }
+
+    public String getDescriere() {
+        return descriere;
+    }
+
+    public int getAnLansare() {
+        return anLansare;
     }
 
     public List<String> getGenuri() {
         return genuri;
     }
 
+    public List<String> getActori() {
+        return actori;
+    }
+
+    @Override
+    public String getTitlu() {
+        return titlu;
+    }
+
+    @Override
     public boolean isEstePremium() {
         return estePremium;
     }
@@ -63,6 +89,7 @@ public class Film implements Reviewable {
 
     @Override
     public String toString() {
-        return titlu + " (" + anLansare + ") | Rating: " + String.format("%.2f", rating) + " | Premium: " + estePremium;
+        return titlu + " (" + anLansare + ") | Rating: " + String.format("%.2f", rating) +
+                " | Vizionari: " + numarVizionari + " | Premium: " + estePremium;
     }
 }

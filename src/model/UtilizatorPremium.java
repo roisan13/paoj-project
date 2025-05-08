@@ -1,10 +1,10 @@
 package model;
 
-public class ContPremium extends Utilizator {
+public class UtilizatorPremium extends Utilizator {
     private String cardBancar;
     private String dataExpirare;
 
-    public ContPremium(String username, String cardBancar, String dataExpirare) {
+    public UtilizatorPremium(String username, String cardBancar, String dataExpirare) {
         super(username, true); // true = este premium
         this.cardBancar = cardBancar;
         this.dataExpirare = dataExpirare;
