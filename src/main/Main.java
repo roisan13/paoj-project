@@ -4,6 +4,7 @@ package main;
 import model.*;
 import service.StreamingService;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -14,31 +15,46 @@ public class Main {
     }
 
     private static void demo(StreamingService service) {
+        // Utilizatori
         service.adaugaUtilizatorPremium("ana", "1234-5678-9012-3456", "12/26");
         service.adaugaUtilizator("bogdan", false);
 
-        service.adaugaFilm("Interstellar", "Calatorie in spatiu", 2014, true);
-        service.adaugaFilm("Shrek", "Comedie animata", 2001, false);
+        // Continut
+        service.adaugaFilm(new Film("Interstellar", "Calatorie in spatiu", 2014,
+                Arrays.asList("SF", "Drama"), Arrays.asList("McConaughey", "Hathaway"), true));
 
-        service.adaugaRecenzie(1, 1, "Fenomenal", 5);
-        service.adaugaRecenzie(2, 2, "Super amuzant", 4);
+        service.adaugaSerial(new Serial("Breaking Bad", 5,
+                Arrays.asList("Drama", "Crima"), true));
 
-        service.vizioneazaFilm(1, 1);
-        service.vizioneazaFilm(2, 2);
-        service.vizioneazaFilm(2, 2);
+        service.adaugaDocumentar(new Documentar("Cosmos", "Carl Sagan", 60,
+                "Universul", false));
 
+        // Recenzii
+        service.adaugaRecenzie(1, 1, "Epic si emotionant", 5);
+        service.adaugaRecenzie(2, 2, "Foarte intens si bine jucat", 5);
+        service.adaugaRecenzie(2, 3, "Informativ si placut", 4);
+
+        // Vizionari
+        service.vizioneazaContinut(1, 1);
+        service.vizioneazaContinut(1, 2);
+        service.vizioneazaContinut(2, 3);
+        service.vizioneazaContinut(2, 3);
+
+        // Afisari
         System.out.println("\n--- DEMO ---");
         System.out.println("\nUtilizatori:");
         service.afiseazaUtilizatori();
 
-        System.out.println("\nFilme:");
-        service.afiseazaFilme();
+        System.out.println("\nContinut:");
+        service.afiseazaContinut();
 
-        System.out.println("\nRecenzii film 1:");
-        service.afiseazaRecenziiFilm(1);
+        System.out.println("\nRecenzii pentru fiecare continut:");
+        service.afiseazaRecenziiContinut(1);
+        service.afiseazaRecenziiContinut(2);
+        service.afiseazaRecenziiContinut(3);
 
-        System.out.println("\nFilme sortate:");
-        service.afiseazaFilmeSortate();
+        System.out.println("\nContinut sortat:");
+        service.afiseazaContinutSortat();
 
         System.out.println("\nVizionari:");
         service.afiseazaToateVizionarile();
@@ -53,14 +69,16 @@ public class Main {
             System.out.println("\n--- MENIU ---");
             System.out.println("1. Adauga utilizator");
             System.out.println("2. Adauga film");
-            System.out.println("3. Afiseaza toti utilizatorii");
-            System.out.println("4. Afiseaza toate filmele");
-            System.out.println("5. Afiseaza toate recenziile");
-            System.out.println("6. Afiseaza recenzii pentru un film");
-            System.out.println("7. Adauga recenzie film (de la utilizator)");
-            System.out.println("8. Afiseaza filme sortate dupa rating/vizionari/an lansare");
-            System.out.println("9. Vizualizeaza film (de la utilizator)");
-            System.out.println("10. Afiseaza toate vizionarile");
+            System.out.println("3. Adauga serial");
+            System.out.println("4. Adauga documentar");
+            System.out.println("5. Afiseaza toti utilizatorii");
+            System.out.println("6. Afiseaza tot continutul");
+            System.out.println("7. Afiseaza toate recenziile");
+            System.out.println("8. Afiseaza recenzii pentru un continut");
+            System.out.println("9. Adauga recenzie la continut");
+            System.out.println("10. Afiseaza continut sortat dupa rating/vizionari");
+            System.out.println("11. Vizualizeaza continut");
+            System.out.println("12. Afiseaza toate vizionarile");
             System.out.println("0. Iesire");
             System.out.print("Alege optiunea: ");
 
@@ -82,44 +100,72 @@ public class Main {
                     }
                 }
                 case 2 -> {
-                    System.out.print("Titlu: ");
+                    System.out.print("Titlu film: ");
                     String titlu = scanner.nextLine();
                     System.out.print("Descriere: ");
                     String descriere = scanner.nextLine();
                     System.out.print("An lansare: ");
                     int an = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Genuri separate prin virgula: ");
+                    String[] genuri = scanner.nextLine().split(",");
+                    System.out.print("Actori separati prin virgula: ");
+                    String[] actori = scanner.nextLine().split(",");
                     System.out.print("Este premium? (true/false): ");
-                    boolean premium = Boolean.parseBoolean(scanner.nextLine());
-                    service.adaugaFilm(titlu, descriere, an, premium);
+                    boolean isPrem = Boolean.parseBoolean(scanner.nextLine());
+                    service.adaugaFilm(new Film(titlu, descriere, an, Arrays.asList(genuri), Arrays.asList(actori), isPrem));
                 }
-                case 3 -> service.afiseazaUtilizatori();
-                case 4 -> service.afiseazaFilme();
-                case 5 -> service.afiseazaToateRecenziile();
-                case 6 -> {
-                    System.out.print("ID film: ");
+                case 3 -> {
+                    System.out.print("Titlu serial: ");
+                    String titlu = scanner.nextLine();
+                    System.out.print("Numar sezoane: ");
+                    int sezoane = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Genuri separate prin virgula: ");
+                    String[] genuri = scanner.nextLine().split(",");
+                    System.out.print("Este premium? (true/false): ");
+                    boolean isPrem = Boolean.parseBoolean(scanner.nextLine());
+                    service.adaugaSerial(new Serial(titlu, sezoane, Arrays.asList(genuri), isPrem));
+                }
+                case 4 -> {
+                    System.out.print("Titlu documentar: ");
+                    String titlu = scanner.nextLine();
+                    System.out.print("Autor: ");
+                    String autor = scanner.nextLine();
+                    System.out.print("Durata (minute): ");
+                    int durata = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Subiect: ");
+                    String subiect = scanner.nextLine();
+                    System.out.print("Este premium? (true/false): ");
+                    boolean isPrem = Boolean.parseBoolean(scanner.nextLine());
+                    service.adaugaDocumentar(new Documentar(titlu, autor, durata, subiect, isPrem));
+                }
+                case 5 -> service.afiseazaUtilizatori();
+                case 6 -> service.afiseazaContinut();
+                case 7 -> service.afiseazaToateRecenziile();
+                case 8 -> {
+                    System.out.print("ID continut: ");
                     int id = Integer.parseInt(scanner.nextLine());
-                    service.afiseazaRecenziiFilm(id);
+                    service.afiseazaRecenziiContinut(id);
                 }
-                case 7 -> {
+                case 9 -> {
                     System.out.print("ID utilizator: ");
                     int idUser = Integer.parseInt(scanner.nextLine());
-                    System.out.print("ID film: ");
-                    int idFilm = Integer.parseInt(scanner.nextLine());
+                    System.out.print("ID continut: ");
+                    int idContinut = Integer.parseInt(scanner.nextLine());
                     System.out.print("Comentariu: ");
                     String comentariu = scanner.nextLine();
                     System.out.print("Stele (1-5): ");
                     int stele = Integer.parseInt(scanner.nextLine());
-                    service.adaugaRecenzie(idUser, idFilm, comentariu, stele);
+                    service.adaugaRecenzie(idUser, idContinut, comentariu, stele);
                 }
-                case 8 -> service.afiseazaFilmeSortate();
-                case 9 -> {
+                case 10 -> service.afiseazaContinutSortat();
+                case 11 -> {
                     System.out.print("ID utilizator: ");
                     int idUser = Integer.parseInt(scanner.nextLine());
-                    System.out.print("ID film: ");
-                    int idFilm = Integer.parseInt(scanner.nextLine());
-                    service.vizioneazaFilm(idUser, idFilm);
+                    System.out.print("ID continut: ");
+                    int idContinut = Integer.parseInt(scanner.nextLine());
+                    service.vizioneazaContinut(idUser, idContinut);
                 }
-                case 10 -> service.afiseazaToateVizionarile();
+                case 12 -> service.afiseazaToateVizionarile();
                 case 0 -> {
                     System.out.println("La revedere!");
                     return;

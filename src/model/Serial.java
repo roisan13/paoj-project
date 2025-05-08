@@ -1,70 +1,15 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Serial implements Reviewable, Viewable {
-    private String titlu;
+public class Serial extends Continut {
     private int numarSezoane;
     private List<String> genuri;
-    private boolean estePremium;
-
-    private double rating;
-    private int numarRecenzii;
-    private int numarVizionari;
-    private List<Recenzie> recenzii;
 
     public Serial(String titlu, int numarSezoane, List<String> genuri, boolean estePremium) {
-        this.titlu = titlu;
+        super(titlu, estePremium);
         this.numarSezoane = numarSezoane;
         this.genuri = genuri;
-        this.estePremium = estePremium;
-        this.rating = 0.0;
-        this.numarRecenzii = 0;
-        this.numarVizionari = 0;
-        this.recenzii = new ArrayList<>();
-    }
-
-    @Override
-    public void adaugaRecenzie(Recenzie recenzie) {
-        recenzii.add(recenzie);
-        double total = rating * numarRecenzii;
-        numarRecenzii++;
-        rating = (total + recenzie.getStele()) / numarRecenzii;
-    }
-
-    @Override
-    public void vizioneaza() {
-        numarVizionari++;
-    }
-
-    @Override
-    public int getNumarVizionari() {
-        return numarVizionari;
-    }
-
-    @Override
-    public String getTitlu() {
-        return titlu;
-    }
-
-    @Override
-    public boolean isEstePremium() {
-        return estePremium;
-    }
-
-    @Override
-    public double getRating() {
-        return rating;
-    }
-
-    @Override
-    public int getNumarRecenzii() {
-        return numarRecenzii;
-    }
-
-    public List<Recenzie> getRecenzii() {
-        return recenzii;
     }
 
     public int getNumarSezoane() {
@@ -77,7 +22,6 @@ public class Serial implements Reviewable, Viewable {
 
     @Override
     public String toString() {
-        return titlu + " | Sezoane: " + numarSezoane + " | Rating: " +
-                String.format("%.2f", rating) + " | Vizionari: " + numarVizionari + " | Premium: " + estePremium;
+        return "Serial: " + super.toString() + " | Sezoane: " + numarSezoane;
     }
 }
